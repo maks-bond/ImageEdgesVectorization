@@ -154,7 +154,7 @@ namespace
 
             if(i_image.pixel(i, i_image.height() - 1) == black)
             {
-                QLine line(QLine(QPoint(i+1, i_image.height() - 1), QPoint(i, i_image.height() - 1)));
+                QLine line(QLine(QPoint(i+1, i_image.height()), QPoint(i, i_image.height())));
                 _ProcessPointsLines(io_points_lines, line);
                 io_lines.m_lines.push_back(line);
             }
@@ -171,7 +171,7 @@ namespace
 
             if(i_image.pixel(i_image.width() - 1, i) == black)
             {
-                QLine line(QPoint(i_image.width() - 1, i), QPoint(i_image.width() - 1, i + 1));
+                QLine line(QPoint(i_image.width(), i), QPoint(i_image.width(), i + 1));
                 _ProcessPointsLines(io_points_lines, line);
                 io_lines.m_lines.push_back(QLine(line));
             }

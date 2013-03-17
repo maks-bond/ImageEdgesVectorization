@@ -4,7 +4,7 @@
 
 void DrawLines(QImage& o_image, const Lines& i_lines)
 {
-    QSize wide_size(i_lines.m_max_width*2, i_lines.m_max_height*2);
+    QSize wide_size(i_lines.m_max_width*2+1, i_lines.m_max_height*2+1);
     o_image = QImage(wide_size, QImage::Format_ARGB32);
     o_image.fill(Qt::white);
 
