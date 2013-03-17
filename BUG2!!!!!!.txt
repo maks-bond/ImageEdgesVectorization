@@ -1,0 +1,2 @@
+With Qpainter
+We must debug the constructor of QPainter
