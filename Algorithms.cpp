@@ -264,6 +264,8 @@ Lines CombineLines(const Lines &i_lines, const PointsLines &i_points_lines, Line
 {
     Lines current_lines = i_lines;
     Lines result_lines;
+    result_lines.m_max_height = i_lines.m_max_height;
+    result_lines.m_max_width = i_lines.m_max_width;
 
     while(current_lines.m_lines.size() > 0)
         _ProcessContour(current_lines, result_lines, i_points_lines, i_lines_combiner);
