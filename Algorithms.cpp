@@ -9,6 +9,8 @@
 #include <QTextStream>
 #include <iostream>
 
+#include "geometryutils.h"
+
 namespace
 {
     enum _BitColors
@@ -321,14 +323,5 @@ QLine DirectCombiner(const QLine &i_a, const QLine &i_b)
     return QLine();
 }
 
-bool operator<(const QPoint& i_p1, const QPoint& i_p2)
-{
-    if(i_p1.x() < i_p2.x())
-        return true;
 
-    if(i_p1.x() == i_p2.x())
-        return i_p1.y() < i_p2.y();
-
-    return false;
-}
 

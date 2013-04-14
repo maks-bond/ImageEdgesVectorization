@@ -16,12 +16,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     Algorithms.cpp \
     Rendering.cpp \
-    contour.cpp
+    contour.cpp \
+    contouralgorithms.cpp \
+    geometryutils.cpp
 
 HEADERS  += mainwindow.h \
     Algorithms.h \
     DataStructures.h \
     Rendering.h \
-    contour.h
+    contour.h \
+    contouralgorithms.h \
+    geometryutils.h
 
 FORMS    += mainwindow.ui

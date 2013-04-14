@@ -21,5 +21,4 @@ bool WhitePredicate(const QRgb& i_rgb);
 
 QLine DirectCombiner(const QLine &i_a, const QLine &i_b);
 
-bool operator<(const QPoint& i_p1, const QPoint& i_p2);
 #endif // ALGORITHMS_H
