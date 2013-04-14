@@ -3,24 +3,42 @@
 #include <stdexcept>
 
 Contour::Contour()
+    : m_is_closed(false)
 {
 }
 
 bool Contour::IsPointInContour(const QPoint &i_point) const
 {
-    return m_contour.constFind(i_point) != m_contour.constEnd();
+    return m_points.indexOf(i_point) != -1;
 }
 
-void Contour::AddContourPoint(const TContourPoint &i_point)
+bool Contour::AddPoint(const QPoint &i_point)
 {
-    if(IsPointInContour(i_point.first))
-        throw std::logic_error("Point is in contour!!!");
+    if(m_is_closed)
+        return false;
 
-    m_contour.insert(i_point.first, i_point.second);
+    if(!m_points.empty() && i_point == m_points[0])
+    {
+        m_is_closed = true;
+        return true;
+    }
+
+    m_points.append(i_point);
+    return true;
 }
 
-TContour Contour::GetContour() const
+
+TPoints Contour::GetContourPoints() const
 {
-    return m_contour;
+    return m_points;
 }
 
+bool Contour::IsClosed() const
+{
+    return m_is_closed;
+}
+
+bool Contour::operator ==(const Contour &i_other)
+{
+    return m_points == i_other.m_points;
+}
