@@ -51,6 +51,7 @@ void Test::LinesToContoursTest_data()
     contour.AddPoint(QPoint(0, 1));
     contour.AddPoint(QPoint(1, 1));
     contour.AddPoint(QPoint(1, 0));
+    contour.MakeClosed();
     contours.push_back(contour);
 
     QTest::newRow("1")<<lines<<contours;
@@ -109,6 +110,7 @@ void Test::TLinkedPointsToContoursTest_data()
     contour.AddPoint(QPoint(0, 1));
     contour.AddPoint(QPoint(1, 1));
     contour.AddPoint(QPoint(1, 0));
+    contour.MakeClosed();
     contours.push_back(contour);
 
     QTest::newRow("1")<<linked_points<<contours;

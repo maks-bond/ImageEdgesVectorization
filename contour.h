@@ -10,11 +10,14 @@
 #include <QPair>
 #include <QMap>
 #include <QVector>
+#include <QList>
 
 #include <QMetaType>
 
-typedef QVector<QPoint> TPoints;
+typedef QList<QPoint> TPoints;
 //typedef QVector<QLine> TLines;
+
+unsigned qHash(const QPoint& i_point);
 
 //Clockwise
 class Contour
@@ -25,14 +28,19 @@ public:
     bool IsPointInContour(const QPoint& i_point) const;
     //void AddLine(const QLine& i_line);
     bool AddPoint(const QPoint& i_point);
+    void Clear();
     TPoints GetContourPoints() const;
+    void MakeClosed();
     //TLines GetContourLines() const;
     bool IsClosed() const;
+    bool IsEmpty() const;
     bool operator==(const Contour& i_other);
 
 private:
     bool m_is_closed;
-    TPoints m_points;
+    QSet<QPoint> m_points;
+    QPoint m_begin_point;
+
     //TLines m_lines;
 };
 
