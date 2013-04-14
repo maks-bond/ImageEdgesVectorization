@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     Algorithms.cpp \
-    Rendering.cpp
+    Rendering.cpp \
+    contour.cpp
 
 HEADERS  += mainwindow.h \
     Algorithms.h \
     DataStructures.h \
-    Rendering.h
+    Rendering.h \
+    contour.h
 
 FORMS    += mainwindow.ui

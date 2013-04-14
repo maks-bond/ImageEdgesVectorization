@@ -5,6 +5,9 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <QFile>
+#include <QTextStream>
+#include <iostream>
 
 namespace
 {
@@ -16,6 +19,20 @@ namespace
 
     typedef QPair<QPoint, QRgb> Pixel;
 
+    void _WriteImageToFile(const QImage& i_image, const QString& i_file)
+    {
+        QFile file(i_file);
+        file.open(QIODevice::WriteOnly);
+
+        QTextStream out(&file);
+        for(int i = 0; i<i_image.width(); ++i)
+        {
+            for(int j = 0; j<i_image.height(); ++j)
+            {
+                out<<i<<" "<<j<<" "<<i_image.pixel(i, j)<<'\n';
+            }
+        }
+    }
 
     QLine _ProcessPixel(Pixel i_pixel, Pixel i_neighbour_pixel)
     {
@@ -250,14 +267,23 @@ void BitMapToLines(Lines &o_lines, PointsLines &o_points_lines, const QImage &i_
 
 void PreprocessBitMapCollision(QImage &io_image)
 {
-    for(int i = 0; i<io_image.width(); i+=1)
+    bool was_collision = false;
+
+    do
     {
-        for(int j = 0; j<io_image.height(); j+=1)
+        was_collision = false;
+        for(int i = 0; i<io_image.width(); i+=1)
         {
-            if(_IsCrossQuadro(io_image, i, j))
-                _MakeBlackQuadro(io_image, i, j);
+            for(int j = 0; j<io_image.height(); j+=1)
+            {
+                if(_IsCrossQuadro(io_image, i, j))
+                {
+                    _MakeBlackQuadro(io_image, i, j);
+                    was_collision = true;
+                }
+            }
         }
-    }
+    } while(was_collision);
 }
 
 Lines CombineLines(const Lines &i_lines, const PointsLines &i_points_lines, LinesCombiner i_lines_combiner)
@@ -305,3 +331,4 @@ bool operator<(const QPoint& i_p1, const QPoint& i_p2)
 
     return false;
 }
+
