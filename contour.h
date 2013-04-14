@@ -15,6 +15,10 @@ class Contour
 public:
     Contour();
 
+    bool IsPointInContour(const TContourPoint& i_point) const;
+    void AddContourPoint(const TContourPoint& i_point);
+    QSet<TContourPoint> GetContour() const;
+
 private:
 
     QSet<TContourPoint> m_contour;
