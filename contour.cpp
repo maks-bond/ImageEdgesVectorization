@@ -46,6 +46,11 @@ void Contour::MakeClosed()
     m_is_closed = true;
 }
 
+void Contour::SetContourPoints(const TPoints &i_points)
+{
+    m_points = i_points;
+}
+
 bool Contour::IsClosed() const
 {
     return m_is_closed;

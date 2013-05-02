@@ -2,6 +2,19 @@
 
 #include <stdexcept>
 
+namespace
+{
+    bool _DoesPointsOnOneLine(const QPoint& i_a, const QPoint& i_b, const QPoint& i_c)
+    {
+        QLine line1(i_a, i_b);
+        QLine line2(i_b, i_c);
+        if((line1.dy() == 0 && line2.dy() == 0) || 1.0*line1.dx()/line1.dy() == 1.0*line2.dx()/line2.dy())
+            return true;
+
+        return false;
+    }
+}
+
 ContourAlgorithms::ContourAlgorithms()
 {
 }
@@ -81,4 +94,34 @@ TContours ContourAlgorithms::_LinkedPointsToContours(const TLinkedPoints &i_link
 
 void ContourAlgorithms::_CombineLinesInContour(Contour &i_contour)
 {
+    TPoints points = i_contour.GetContourPoints();
+
+    if(points.size() <= 2)
+        return;
+
+    int i = 0, j = 1, k = 2;
+
+    while(k < points.size())
+    {
+        if(_DoesPointsOnOneLine(points[i], points[j], points[k]))
+        {
+            points.remove(j);
+            ++k;
+        }
+        else
+            ++i, ++j, ++k;
+    }
+
+    if(points.size() >2 && i_contour.IsClosed())
+    {
+        if(_DoesPointsOnOneLine(points[points.size() - 2], points[points.size() - 1], points[0]))
+            points.pop_back();
+
+        if(points.size() > 2 &&
+                _DoesPointsOnOneLine(points[points.size() - 1], points[0], points[1]))
+            points.pop_front();
+    }
+
+    if(points.size() < i_contour.GetContourPoints().size())
+        i_contour.SetContourPoints(points);
 }

@@ -28,6 +28,7 @@ public:
     void Clear();
     const TPoints& GetContourPoints() const;
     void MakeClosed();
+    void SetContourPoints(const TPoints& i_points);
     //TLines GetContourLines() const;
     bool IsClosed() const;
     bool IsEmpty() const;
