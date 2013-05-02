@@ -15,7 +15,6 @@ struct Lines
 };
 
 typedef QPair<QPoint, QPoint> TPointsPair;
-typedef QMap<QPoint, QPair<QLine, QLine> > PointsLines;
 typedef QMap<QPoint, TPointsPair > TLinkedPoints;
 
 Q_DECLARE_METATYPE(Lines)

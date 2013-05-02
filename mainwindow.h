@@ -30,16 +30,16 @@ private slots:
 
 private:
     void _SetUpImage(const QImage& i_image);
-    void _DrawLines(QImage& i_image);
+    void _DrawContours(QImage& i_image);
 
     Ui::MainWindow *ui;
     QImage m_original_image;
     QImage m_bitmap_image;
-    QImage m_lines_image;
+    QImage m_contours_image;
     QImage m_combined_lines_image;
     TContours m_contours;
-    Lines m_lines;
-    PointsLines m_points_lines;
+    int m_max_height;
+    int m_max_width;
 };
 
 #endif // MAINWINDOW_H

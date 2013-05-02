@@ -59,25 +59,29 @@ void MainWindow::OnFormLines()
 {
     if(!m_bitmap_image.isNull())
     {
-        BitMapToLines(m_lines, m_points_lines, m_bitmap_image);
-        m_contours = ContourAlgorithms::LinesToContours(m_lines);
-        DrawContours(m_lines_image, m_contours, m_lines.m_max_height, m_lines.m_max_width);
-        _SetUpImage(m_lines_image);
+        Lines lines;
+        BitMapToLines(lines, m_bitmap_image);
+        m_max_height = lines.m_max_height;
+        m_max_width = lines.m_max_width;
+        m_contours = ContourAlgorithms::LinesToContours(lines);
+        _DrawContours(m_contours_image);
     }
 }
 
 void MainWindow::OnCombineLines()
 {
-    /*if(m_lines.m_lines.isEmpty())
-        return;
-
-    m_lines = CombineLines(m_lines, m_points_lines, &DirectCombiner);
-    _DrawLines(m_combined_lines_image);*/
+    ContourAlgorithms::CombineLinesInContours(m_contours);
+    _DrawContours(m_contours_image);
 }
 
-void MainWindow::_DrawLines(QImage& i_image)
+void MainWindow::_DrawContours(QImage& i_image)
 {
-    DrawLines(i_image, m_lines);
+    DrawContours(i_image, m_contours, m_max_height, m_max_width);
     _SetUpImage(i_image);
-    ui->editLines->setText(QString::number(m_lines.m_lines.size()));
+    int number_of_points = 0;
+
+    for(int i = 0; i<m_contours.size(); ++i)
+        number_of_points+=m_contours[i].GetContourPoints().size();
+
+    ui->editLines->setText(QString::number(number_of_points));
 }
