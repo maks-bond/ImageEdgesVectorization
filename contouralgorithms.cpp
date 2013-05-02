@@ -67,6 +67,8 @@ TContours ContourAlgorithms::_LinkedPointsToContours(const TLinkedPoints &i_link
         {
             contours.push_back(current_contour);
             current_contour.Clear();
+            current_point = linked_points.begin()->first;
+            current_contour.AddPoint(current_point);
         }
 
         QPoint prev_point = current_point;
@@ -104,10 +106,7 @@ void ContourAlgorithms::_CombineLinesInContour(Contour &i_contour)
     while(k < points.size())
     {
         if(_DoesPointsOnOneLine(points[i], points[j], points[k]))
-        {
             points.remove(j);
-            ++k;
-        }
         else
             ++i, ++j, ++k;
     }

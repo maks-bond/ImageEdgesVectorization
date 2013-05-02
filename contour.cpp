@@ -40,10 +40,12 @@ const TPoints& Contour::GetContourPoints() const
 
 void Contour::MakeClosed()
 {
-    if(m_is_closed)
-        throw std::logic_error("Bad!!!");
-
     m_is_closed = true;
+}
+
+void Contour::MakeUnclosed()
+{
+    m_is_closed = false;
 }
 
 void Contour::SetContourPoints(const TPoints &i_points)

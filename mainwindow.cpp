@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "Algorithms.h"
+#include "contouralgorithms.h"
 #include "Rendering.h"
 
 #include <QResizeEvent>
@@ -59,17 +60,19 @@ void MainWindow::OnFormLines()
     if(!m_bitmap_image.isNull())
     {
         BitMapToLines(m_lines, m_points_lines, m_bitmap_image);
-        _DrawLines(m_lines_image);
+        m_contours = ContourAlgorithms::LinesToContours(m_lines);
+        DrawContours(m_lines_image, m_contours, m_lines.m_max_height, m_lines.m_max_width);
+        _SetUpImage(m_lines_image);
     }
 }
 
 void MainWindow::OnCombineLines()
 {
-    if(m_lines.m_lines.isEmpty())
+    /*if(m_lines.m_lines.isEmpty())
         return;
 
     m_lines = CombineLines(m_lines, m_points_lines, &DirectCombiner);
-    _DrawLines(m_combined_lines_image);
+    _DrawLines(m_combined_lines_image);*/
 }
 
 void MainWindow::_DrawLines(QImage& i_image)

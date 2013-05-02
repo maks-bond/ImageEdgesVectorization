@@ -137,13 +137,27 @@ void Test::TLinkedPointsToContoursTest_data()
     contours.push_back(contour);
 
     QTest::newRow("1")<<linked_points<<contours;
+
+    linked_points.insert(QPoint(2, 0), qMakePair(QPoint(3, 0), QPoint(2, 1)));
+    linked_points.insert(QPoint(2, 1), qMakePair(QPoint(2, 0), QPoint(3, 1)));
+    linked_points.insert(QPoint(3, 1), qMakePair(QPoint(2, 1), QPoint(3, 0)));
+    linked_points.insert(QPoint(3, 0), qMakePair(QPoint(3, 1), QPoint(2, 0)));
+
+    contour.Clear();
+    contour.AddPoint(QPoint(2, 0));
+    contour.AddPoint(QPoint(2, 1));
+    contour.AddPoint(QPoint(3, 1));
+    contour.AddPoint(QPoint(3, 0));
+    contour.MakeClosed();
+    contours.push_back(contour);
+
+    QTest::newRow("2")<<linked_points<<contours;
 }
 
 void Test::CombineContourTest()
 {
     QFETCH(Contour, contour);
     QFETCH(Contour, result);
-
 
     ContourAlgorithms::_CombineLinesInContour(contour);
     QCOMPARE(contour, result);
@@ -164,7 +178,64 @@ void Test::CombineContourTest_data()
     result.AddPoint(QPoint(2, 0));
 
     QTest::newRow("1")<<contour<<result;
-}
+
+    contour.Clear();
+    contour.AddPoint(QPoint(0, 0));
+    contour.AddPoint(QPoint(0, 1));
+    contour.AddPoint(QPoint(1, 1));
+    contour.AddPoint(QPoint(1, 0));
+
+    QTest::newRow("2")<<contour<<contour;
+    contour.MakeClosed();
+
+    QTest::newRow("3")<<contour<<contour;
+
+    contour.Clear();
+    contour.AddPoint(QPoint(0, 0));
+    contour.AddPoint(QPoint(0, 1));
+    contour.AddPoint(QPoint(0, 2));
+    contour.AddPoint(QPoint(1, 2));
+    contour.AddPoint(QPoint(2, 2));
+    contour.AddPoint(QPoint(2, 1));
+    contour.AddPoint(QPoint(2, 0));
+    contour.AddPoint(QPoint(1, 0));
+    contour.MakeClosed();
+
+    result.Clear();
+    result.AddPoint(QPoint(0, 0));
+    result.AddPoint(QPoint(0, 2));
+    result.AddPoint(QPoint(2, 2));
+    result.AddPoint(QPoint(2, 0));
+    result.MakeClosed();
+
+    QTest::newRow("4")<<contour<<result;
+
+    contour.MakeUnclosed();
+    result.MakeUnclosed();
+    result.AddPoint(QPoint(1, 0));
+
+    QTest::newRow("5")<<contour<<result;
+
+    contour.Clear();
+    contour.AddPoint(QPoint(0, 0));
+    contour.AddPoint(QPoint(0, 1));
+    contour.AddPoint(QPoint(1, 2));
+    contour.AddPoint(QPoint(2, 3));
+    contour.AddPoint(QPoint(2, 2));
+    contour.AddPoint(QPoint(2, 1));
+    contour.AddPoint(QPoint(2, 0));
+    contour.AddPoint(QPoint(1, 0));
+    contour.MakeClosed();
+
+    result.Clear();
+    result.AddPoint(QPoint(0, 0));
+    result.AddPoint(QPoint(0, 1));
+    result.AddPoint(QPoint(2, 3));
+    result.AddPoint(QPoint(2, 0));
+    result.MakeClosed();
+
+    QTest::newRow("6")<<contour<<result;
+    }
 
 #undef public
 

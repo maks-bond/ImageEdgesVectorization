@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "contour.h"
 #include "DataStructures.h"
 
 #include <QMainWindow>
@@ -36,6 +37,7 @@ private:
     QImage m_bitmap_image;
     QImage m_lines_image;
     QImage m_combined_lines_image;
+    TContours m_contours;
     Lines m_lines;
     PointsLines m_points_lines;
 };
