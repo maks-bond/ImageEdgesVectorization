@@ -9,13 +9,15 @@ class Lines;
 class ContourAlgorithms
 {
 public:
-    static TLinkedPoints LinesToLinkedPoints(const Lines& i_lines);
-    static TContours LinkedPointsToContours(const TLinkedPoints& i_linked_points);
-
     static TContours LinesToContours(const Lines& i_lines);
+    static void CombineLinesInContours(TContours& i_contours);
 
 private:
     ContourAlgorithms();
+
+    static TLinkedPoints _LinesToLinkedPoints(const Lines& i_lines);
+    static TContours _LinkedPointsToContours(const TLinkedPoints& i_linked_points);
+    static void _CombineLinesInContour(Contour& i_contour);
 };
 
 #endif // CONTOURALGORITHMS_H

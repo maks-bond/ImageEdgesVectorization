@@ -1,7 +1,27 @@
 #include <QString>
 #include <QtTest>
 
+#define private public
+
 #include "contouralgorithms.h"
+
+namespace
+{
+    bool operator ==(const Contour& i_one, const Contour& i_second)
+    {
+        if(i_one.IsClosed() && i_second.IsClosed() && i_one.GetContourPoints().size() ==
+                i_second.GetContourPoints().size())
+        {
+            for(int i = 0; i<i_one.GetContourPoints().size(); ++i)
+                if(i_one.GetContourPoints().indexOf(i_second.GetContourPoints()[i]) == -1)
+                    return false;
+
+            return true;
+        }
+
+        return i_one.GetContourPoints() == i_second.GetContourPoints() && i_one.IsClosed() == i_second.IsClosed();
+    }
+}
 
 class Test : public QObject
 {
@@ -19,6 +39,9 @@ private Q_SLOTS:
 
     void TLinkedPointsToContoursTest();
     void TLinkedPointsToContoursTest_data();
+
+    void CombineContourTest();
+    void CombineContourTest_data();
 };
 
 Test::Test()
@@ -62,7 +85,7 @@ void Test::LinesToTLinkedPointsTest()
     QFETCH(Lines, lines);
     QFETCH(TLinkedPoints, result);
 
-    QCOMPARE(ContourAlgorithms::LinesToLinkedPoints(lines), result);
+    QCOMPARE(ContourAlgorithms::_LinesToLinkedPoints(lines), result);
 }
 
 void Test::LinesToTLinkedPointsTest_data()
@@ -90,7 +113,7 @@ void Test::TLinkedPointsToContoursTest()
     QFETCH(TLinkedPoints, linked_points);
     QFETCH(TContours, result);
 
-    QCOMPARE(ContourAlgorithms::LinkedPointsToContours(linked_points), result);
+    QCOMPARE(ContourAlgorithms::_LinkedPointsToContours(linked_points), result);
 }
 
 void Test::TLinkedPointsToContoursTest_data()
@@ -115,6 +138,25 @@ void Test::TLinkedPointsToContoursTest_data()
 
     QTest::newRow("1")<<linked_points<<contours;
 }
+
+void Test::CombineContourTest()
+{
+
+}
+
+void Test::CombineContourTest_data()
+{
+    /*QTest::addColumn<Contour>("contour");
+    QTest::addColumn<Contour>("result");
+
+    Contour contour;
+    contour.AddPoint(QPoint(0, 0));
+    contour.AddPoint(QPoint(1, 0));
+    contour.AddPoint(QPoint(2, 0));*/
+
+}
+
+#undef public
 
 QTEST_APPLESS_MAIN(Test)
 

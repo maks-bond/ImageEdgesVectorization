@@ -8,11 +8,15 @@ ContourAlgorithms::ContourAlgorithms()
 
 TContours ContourAlgorithms::LinesToContours(const Lines &i_lines)
 {
-    return LinkedPointsToContours(LinesToLinkedPoints(i_lines));
+    return _LinkedPointsToContours(_LinesToLinkedPoints(i_lines));
+}
+
+void ContourAlgorithms::CombineLinesInContours(TContours &i_contours)
+{
 }
 
 
-TLinkedPoints ContourAlgorithms::LinesToLinkedPoints(const Lines &i_lines)
+TLinkedPoints ContourAlgorithms::_LinesToLinkedPoints(const Lines &i_lines)
 {
     TLinkedPoints linked_points;
 
@@ -30,7 +34,7 @@ TLinkedPoints ContourAlgorithms::LinesToLinkedPoints(const Lines &i_lines)
     return linked_points;
 }
 
-TContours ContourAlgorithms::LinkedPointsToContours(const TLinkedPoints &i_linked_points)
+TContours ContourAlgorithms::_LinkedPointsToContours(const TLinkedPoints &i_linked_points)
 {
     if(i_linked_points.empty())
         return TContours();
@@ -69,4 +73,8 @@ TContours ContourAlgorithms::LinkedPointsToContours(const TLinkedPoints &i_linke
     }
 
     return contours;
+}
+
+void ContourAlgorithms::_CombineLinesInContour(Contour &i_contour)
+{
 }

@@ -1,1 +1,6 @@
 -Optimize preprocess bitmap collision
+
+
+-Combine lines in contour
+-Launch Gauss on contours
+-Combine lines with angle around 180 degrees
