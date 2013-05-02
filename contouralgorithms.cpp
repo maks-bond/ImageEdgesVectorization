@@ -13,6 +13,10 @@ TContours ContourAlgorithms::LinesToContours(const Lines &i_lines)
 
 void ContourAlgorithms::CombineLinesInContours(TContours &i_contours)
 {
+    for(int i = 0; i<i_contours.size(); ++i)
+    {
+        _CombineLinesInContour(i_contours[i]);
+    }
 }
 
 

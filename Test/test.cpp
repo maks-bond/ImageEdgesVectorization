@@ -141,19 +141,29 @@ void Test::TLinkedPointsToContoursTest_data()
 
 void Test::CombineContourTest()
 {
+    QFETCH(Contour, contour);
+    QFETCH(Contour, result);
 
+
+    ContourAlgorithms::_CombineLinesInContour(contour);
+    QCOMPARE(contour, result);
 }
 
 void Test::CombineContourTest_data()
 {
-    /*QTest::addColumn<Contour>("contour");
+    QTest::addColumn<Contour>("contour");
     QTest::addColumn<Contour>("result");
 
     Contour contour;
     contour.AddPoint(QPoint(0, 0));
     contour.AddPoint(QPoint(1, 0));
-    contour.AddPoint(QPoint(2, 0));*/
+    contour.AddPoint(QPoint(2, 0));
 
+    Contour result;
+    result.AddPoint(QPoint(0, 0));
+    result.AddPoint(QPoint(2, 0));
+
+    QTest::newRow("1")<<contour<<result;
 }
 
 #undef public
