@@ -5,10 +5,16 @@
 #include <QFile>
 #include <QTextStream>
 
+#include <cmath>
 #include <stdexcept>
 
 namespace
 {
+    double math_round(double i_x)
+    {
+        return std::floor(i_x + 0.5);
+    }
+
     bool _DoesPointsOnOneLine(const QPoint& i_a, const QPoint& i_b, const QPoint& i_c)
     {
         QLine line1(i_a, i_b);
@@ -150,6 +156,9 @@ void ContourAlgorithms::_CombineLinesInContour(Contour &i_contour)
 
 void ContourAlgorithms::_ApplyGauss(Contour &i_contour, double i_deviation, int i_number_of_coeffs)
 {
+    if(i_contour.GetContourPoints().size() <= i_number_of_coeffs)
+        return;
+
     if(!i_contour.IsClosed())
         throw std::logic_error("Bad!");
 
@@ -167,15 +176,15 @@ void ContourAlgorithms::_ApplyGauss(Contour &i_contour, double i_deviation, int 
 
     for(int i = 0; i < points.size(); ++i)
     {
-        QPoint new_point(0, 0);
+        QPointF new_float_point(0, 0);
 
         for(int j = 0; j<indexes.size(); ++j)
         {
             int index = (i+indexes[j]+10*points.size())%points.size();
-            new_point+=points[index]*coeffs[j];
+            new_float_point += QPointF(points[index])*coeffs[j];
         }
 
-        new_points.push_back(new_point);
+        new_points.push_back(QPoint(math_round(new_float_point.x()), math_round(new_float_point.y())));
     }
 
     i_contour.SetContourPoints(new_points);
