@@ -1,5 +1,10 @@
 #include "contouralgorithms.h"
 
+#include "math_utils.h"
+
+#include <QFile>
+#include <QTextStream>
+
 #include <stdexcept>
 
 namespace
@@ -13,10 +18,28 @@ namespace
 
         return false;
     }
+
+    void _WriteCoeffs(const QVector<double>& i_coeffs, const QString& i_file)
+    {
+        QFile file(i_file);
+        file.open(QFile::WriteOnly);
+        QTextStream out(&file);
+
+        for(int i = 0; i < i_coeffs.size(); ++i)
+            out<<QString::number(i_coeffs[i])<<" ";
+
+        file.close();
+    }
 }
 
 ContourAlgorithms::ContourAlgorithms()
 {
+}
+
+void ContourAlgorithms::ApplyGauss(TContours &i_contours, double i_deviation, int i_number_of_coeffs)
+{
+    for(int i = 0; i<i_contours.size(); ++i)
+        _ApplyGauss(i_contours[i], i_deviation, i_number_of_coeffs);
 }
 
 TContours ContourAlgorithms::LinesToContours(const Lines &i_lines)
@@ -123,4 +146,37 @@ void ContourAlgorithms::_CombineLinesInContour(Contour &i_contour)
 
     if(points.size() < i_contour.GetContourPoints().size())
         i_contour.SetContourPoints(points);
+}
+
+void ContourAlgorithms::_ApplyGauss(Contour &i_contour, double i_deviation, int i_number_of_coeffs)
+{
+    if(!i_contour.IsClosed())
+        throw std::logic_error("Bad!");
+
+    QVector<double> coeffs(Math::FormGaussCoeffs(i_deviation, i_number_of_coeffs));
+    QVector<int> indexes(Math::FormIndexes(i_number_of_coeffs));
+
+    //Write temp
+    static bool was_written = false;
+
+    if(!was_written)
+        _WriteCoeffs(coeffs, "a.out");
+
+    TPoints new_points;
+    TPoints points = i_contour.GetContourPoints();
+
+    for(int i = 0; i < points.size(); ++i)
+    {
+        QPoint new_point(0, 0);
+
+        for(int j = 0; j<indexes.size(); ++j)
+        {
+            int index = (i+indexes[j]+10*points.size())%points.size();
+            new_point+=points[index]*coeffs[j];
+        }
+
+        new_points.push_back(new_point);
+    }
+
+    i_contour.SetContourPoints(new_points);
 }

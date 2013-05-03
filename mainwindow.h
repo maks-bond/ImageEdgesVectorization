@@ -27,6 +27,7 @@ private slots:
     void OnToMask();
     void OnFormLines();
     void OnCombineLines();
+    void OnApplyGauss();
 
 private:
     void _SetUpImage(const QImage& i_image);

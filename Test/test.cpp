@@ -260,7 +260,7 @@ void Test::FormIndexesTest()
     QFETCH(int, number);
     QFETCH(QVector<int>, result);
 
-    QCOMPARE(Math::_FormIndexes(number), result);
+    QCOMPARE(Math::FormIndexes(number), result);
 }
 
 void Test::FormIndexesTest_data()

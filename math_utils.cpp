@@ -12,7 +12,7 @@ QVector<double> Math::FormGaussCoeffs(double i_deviation, int i_number_of_coeffs
 
     QVector<double> res;
     QVector<double> not_norm_res;
-    QVector<int> indexes = _FormIndexes(i_number_of_coeffs);
+    QVector<int> indexes = FormIndexes(i_number_of_coeffs);
 
     double sum = 0;
 
@@ -35,7 +35,7 @@ double Math::_Gauss(double i_deviation, double x)
     return exp(-(x*x)/(2*i_deviation*i_deviation))/(i_deviation*sqrt(2*g_pi));
 }
 
-QVector<int> Math::_FormIndexes(int i_number)
+QVector<int> Math::FormIndexes(int i_number)
 {
     QVector<int> result;
 

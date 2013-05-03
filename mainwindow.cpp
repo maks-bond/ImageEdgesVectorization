@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->buttonToMask, SIGNAL(clicked()), this, SLOT(OnToMask()));
     connect(ui->buttonFormLines, SIGNAL(clicked()), this, SLOT(OnFormLines()));
     connect(ui->buttonCombineLines, SIGNAL(clicked()), this, SLOT(OnCombineLines()));
+    connect(ui->buttonGauss, SIGNAL(clicked()), this, SLOT(OnApplyGauss()));
 }
 
 void MainWindow::resizeEvent(QResizeEvent *ip_event)
@@ -71,6 +72,12 @@ void MainWindow::OnFormLines()
 void MainWindow::OnCombineLines()
 {
     ContourAlgorithms::CombineLinesInContours(m_contours);
+    _DrawContours(m_contours_image);
+}
+
+void MainWindow::OnApplyGauss()
+{
+    ContourAlgorithms::ApplyGauss(m_contours, ui->spinDeviation->value(), ui->spinValues->value());
     _DrawContours(m_contours_image);
 }
 
