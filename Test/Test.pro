@@ -18,11 +18,13 @@ INCLUDEPATH += ../
 HEADERS += ../contour.h \
            ../contouralgorithms.h \
            ../DataStructures.h \
-           ../geometryutils.h
+           ../geometryutils.h \
+    ../math_utils.h
 
 SOURCES += test.cpp \
            ../contouralgorithms.cpp \
            ../contour.cpp \
-           ../geometryutils.cpp
+           ../geometryutils.cpp \
+    ../math_utils.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"

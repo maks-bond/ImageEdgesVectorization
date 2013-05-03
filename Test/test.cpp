@@ -4,6 +4,9 @@
 #define private public
 
 #include "contouralgorithms.h"
+#include "math_utils.h"
+
+#include <cmath>
 
 namespace
 {
@@ -20,6 +23,13 @@ namespace
         }
 
         return i_one.GetContourPoints() == i_second.GetContourPoints() && i_one.IsClosed() == i_second.IsClosed();
+    }
+
+    const double epsilon = 1e-3;
+
+    bool double_equal(double i_x, double i_y)
+    {
+        return fabs(i_x - i_y) < epsilon;
     }
 }
 
@@ -42,6 +52,14 @@ private Q_SLOTS:
 
     void CombineContourTest();
     void CombineContourTest_data();
+
+    void FormIndexesTest();
+    void FormIndexesTest_data();
+
+    void GaussTest();
+    void GaussTest_data();
+
+    void FormGaussCoeffsTest();
 };
 
 Test::Test()
@@ -235,10 +253,73 @@ void Test::CombineContourTest_data()
     result.MakeClosed();
 
     QTest::newRow("6")<<contour<<result;
+}
+
+void Test::FormIndexesTest()
+{
+    QFETCH(int, number);
+    QFETCH(QVector<int>, result);
+
+    QCOMPARE(Math::_FormIndexes(number), result);
+}
+
+void Test::FormIndexesTest_data()
+{
+    QTest::addColumn<int>("number");
+    QTest::addColumn<QVector<int> >("result");
+
+    QVector<int> result(1, 0);
+
+    QTest::newRow("1")<<1<<result;
+
+    result.push_front(-1);
+    result.push_front(-2);
+    result.push_back(1);
+    result.push_back(2);
+
+    QTest::newRow("2")<<5<<result;
+}
+
+void Test::GaussTest()
+{
+    QFETCH(double, deviation);
+    QFETCH(double, x);
+    QFETCH(double, result);
+
+    bool res = double_equal(Math::_Gauss(deviation, x), result);
+    QCOMPARE(res, true);
+}
+
+void Test::GaussTest_data()
+{
+    QTest::addColumn<double>("deviation");
+    QTest::addColumn<double>("x");
+    QTest::addColumn<double>("result");
+
+    QTest::newRow("1")<<1.0<<0.0<<0.3989;
+    QTest::newRow("2")<<0.5<<1.0<<0.108;
+}
+
+void Test::FormGaussCoeffsTest()
+{
+    QVector<double> coeffs(Math::FormGaussCoeffs(0.5, 5));
+
+    for(int i = 0; i<coeffs.size()/2; ++i)
+    {
+        QVERIFY(double_equal(coeffs[i], coeffs[coeffs.size()-i-1]));
     }
+
+    double sum = 0;
+
+    for(int i = 0; i<coeffs.size(); ++i)
+        sum += coeffs[i];
+
+    QVERIFY(double_equal(sum, 1.0));
+}
 
 #undef public
 
 QTEST_APPLESS_MAIN(Test)
 
 #include "test.moc"
+
