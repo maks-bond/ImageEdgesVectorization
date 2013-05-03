@@ -3,6 +3,9 @@
 #include <cmath>
 #include <stdexcept>
 
+#include <QLine>
+#include <QPoint>
+
 const double g_pi = acos(-1.0);
 
 QVector<double> Math::FormGaussCoeffs(double i_deviation, int i_number_of_coeffs)
@@ -43,6 +46,28 @@ QVector<int> Math::FormIndexes(int i_number)
         result.push_back(i);
 
     return result;
+}
+
+double Math::FromGradusToRadian(double i_gradus)
+{
+    return g_pi*i_gradus/180;
+}
+
+double Math::FromRadianToGradus(double i_radian)
+{
+    return i_radian*180/g_pi;
+}
+
+double Math::LineAngleInGradus(const QPoint &i_a, const QPoint &i_b)
+{
+    QLine line(i_a, i_b);
+
+    if(line.dy() == 0)
+        return 90;
+
+    double tangens = line.dx()/line.dy();
+    double angle_in_radian = atan(tangens);
+    return FromRadianToGradus(angle_in_radian);
 }
 
 Math::Math()

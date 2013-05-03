@@ -25,7 +25,7 @@ namespace
         return i_one.GetContourPoints() == i_second.GetContourPoints() && i_one.IsClosed() == i_second.IsClosed();
     }
 
-    const double epsilon = 1e-3;
+    const double epsilon = 1e-2;
 
     bool double_equal(double i_x, double i_y)
     {
@@ -60,6 +60,8 @@ private Q_SLOTS:
     void GaussTest_data();
 
     void FormGaussCoeffsTest();
+    void FromGradusToRadianTest();
+    void FromRadianToGradusTest();
 };
 
 Test::Test()
@@ -315,6 +317,18 @@ void Test::FormGaussCoeffsTest()
         sum += coeffs[i];
 
     QVERIFY(double_equal(sum, 1.0));
+}
+
+void Test::FromGradusToRadianTest()
+{
+    QCOMPARE(double_equal(Math::FromGradusToRadian(30), 0.5236), true);
+    QCOMPARE(double_equal(Math::FromGradusToRadian(170), 2.9671), true);
+}
+
+void Test::FromRadianToGradusTest()
+{
+    QCOMPARE(double_equal(Math::FromRadianToGradus(0.5236), 30), true);
+    QCOMPARE(double_equal(Math::FromRadianToGradus(2.9671), 170), true);
 }
 
 #undef public

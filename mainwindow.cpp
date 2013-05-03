@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->buttonFormLines, SIGNAL(clicked()), this, SLOT(OnFormLines()));
     connect(ui->buttonCombineLines, SIGNAL(clicked()), this, SLOT(OnCombineLines()));
     connect(ui->buttonGauss, SIGNAL(clicked()), this, SLOT(OnApplyGauss()));
+    connect(ui->buttonBack, SIGNAL(clicked()), this, SLOT(OnBack()));
 }
 
 void MainWindow::resizeEvent(QResizeEvent *ip_event)
@@ -71,14 +72,30 @@ void MainWindow::OnFormLines()
 
 void MainWindow::OnCombineLines()
 {
+    m_prev_contours = m_contours;
+    m_prev_image = m_bitmap_image;
     ContourAlgorithms::CombineLinesInContours(m_contours);
     _DrawContours(m_contours_image);
 }
 
 void MainWindow::OnApplyGauss()
 {
+    m_prev_image = m_contours_image;
+    m_prev_contours = m_contours;
     ContourAlgorithms::ApplyGauss(m_contours, ui->spinDeviation->value(), ui->spinValues->value());
     _DrawContours(m_contours_image);
+}
+
+void MainWindow::OnBack()
+{
+    if(!m_prev_image.isNull() && !m_prev_contours.empty())
+    {
+        m_contours = m_prev_contours;
+        m_contours_image = m_prev_image;
+        _SetUpImage(m_prev_image);
+        m_prev_image = QImage();
+        m_prev_contours.clear();
+    }
 }
 
 void MainWindow::_DrawContours(QImage& i_image)

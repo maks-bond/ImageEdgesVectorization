@@ -28,6 +28,7 @@ private slots:
     void OnFormLines();
     void OnCombineLines();
     void OnApplyGauss();
+    void OnBack();
 
 private:
     void _SetUpImage(const QImage& i_image);
@@ -36,8 +37,9 @@ private:
     Ui::MainWindow *ui;
     QImage m_original_image;
     QImage m_bitmap_image;
+    QImage m_prev_image;
     QImage m_contours_image;
-    QImage m_combined_lines_image;
+    TContours m_prev_contours;
     TContours m_contours;
     int m_max_height;
     int m_max_width;

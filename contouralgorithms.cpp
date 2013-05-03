@@ -156,8 +156,8 @@ void ContourAlgorithms::_CombineLinesInContour(Contour &i_contour)
 
 void ContourAlgorithms::_ApplyGauss(Contour &i_contour, double i_deviation, int i_number_of_coeffs)
 {
-    if(i_contour.GetContourPoints().size() <= i_number_of_coeffs)
-        return;
+    //if(i_contour.GetContourPoints().size() <= i_number_of_coeffs)
+      //  return;
 
     if(!i_contour.IsClosed())
         throw std::logic_error("Bad!");
@@ -169,7 +169,10 @@ void ContourAlgorithms::_ApplyGauss(Contour &i_contour, double i_deviation, int 
     static bool was_written = false;
 
     if(!was_written)
+    {
         _WriteCoeffs(coeffs, "a.out");
+        was_written = true;
+    }
 
     TPoints new_points;
     TPoints points = i_contour.GetContourPoints();
