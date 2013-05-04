@@ -3,6 +3,7 @@
 
 #include "Algorithms.h"
 #include "contouralgorithms.h"
+#include "Functors.h"
 #include "Rendering.h"
 
 #include <QResizeEvent>
@@ -17,9 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(OnOpen()));
     connect(ui->buttonToMask, SIGNAL(clicked()), this, SLOT(OnToMask()));
     connect(ui->buttonFormLines, SIGNAL(clicked()), this, SLOT(OnFormLines()));
-    connect(ui->buttonCombineLines, SIGNAL(clicked()), this, SLOT(OnCombineLines()));
     connect(ui->buttonGauss, SIGNAL(clicked()), this, SLOT(OnApplyGauss()));
     connect(ui->buttonBack, SIGNAL(clicked()), this, SLOT(OnBack()));
+    connect(ui->buttonCombine, SIGNAL(clicked()), this, SLOT(OnCombine()));
+    connect(ui->buttonCombineLength, SIGNAL(clicked()), this, SLOT(OnCombineLength()));
 }
 
 void MainWindow::resizeEvent(QResizeEvent *ip_event)
@@ -70,14 +72,6 @@ void MainWindow::OnFormLines()
     }
 }
 
-void MainWindow::OnCombineLines()
-{
-    m_prev_contours = m_contours;
-    m_prev_image = m_bitmap_image;
-    ContourAlgorithms::CombineLinesInContours(m_contours);
-    _DrawContours(m_contours_image);
-}
-
 void MainWindow::OnApplyGauss()
 {
     m_prev_image = m_contours_image;
@@ -96,6 +90,26 @@ void MainWindow::OnBack()
         m_prev_image = QImage();
         m_prev_contours.clear();
     }
+}
+
+void MainWindow::OnCombine()
+{
+    m_prev_contours = m_contours;
+    m_prev_image = m_contours_image;
+    AngleFunctor* p_functor = new AngleFunctor(ui->spinAngle->value());
+    ContourAlgorithms::CombineLinesInContours(m_contours, p_functor);
+    delete p_functor;
+    _DrawContours(m_contours_image);
+}
+
+void MainWindow::OnCombineLength()
+{
+    m_prev_contours = m_contours;
+    m_prev_image = m_contours_image;
+    LengthFunctor* p_functor = new LengthFunctor(ui->spinLength->value());
+    ContourAlgorithms::CombineLinesInContours(m_contours, p_functor);
+    delete p_functor;
+    _DrawContours(m_contours_image);
 }
 
 void MainWindow::_DrawContours(QImage& i_image)

@@ -5,6 +5,7 @@
 
 #include "contouralgorithms.h"
 #include "math_utils.h"
+#include "Functors.h"
 
 #include <cmath>
 
@@ -23,13 +24,6 @@ namespace
         }
 
         return i_one.GetContourPoints() == i_second.GetContourPoints() && i_one.IsClosed() == i_second.IsClosed();
-    }
-
-    const double epsilon = 1e-2;
-
-    bool double_equal(double i_x, double i_y)
-    {
-        return fabs(i_x - i_y) < epsilon;
     }
 }
 
@@ -62,6 +56,18 @@ private Q_SLOTS:
     void FormGaussCoeffsTest();
     void FromGradusToRadianTest();
     void FromRadianToGradusTest();
+
+    void LineAngleInGradusTest();
+    void LineAngleInGradusTest_data();
+
+    void DoesLinesWithSameAngleTest();
+    void DoesLinesWithSameAngleTest_data();
+
+    void DistanceTest();
+    void DistanceTest_data();
+
+    void DistanceFunctorTest();
+    void DistanceFunctorTest_data();
 };
 
 Test::Test()
@@ -179,7 +185,10 @@ void Test::CombineContourTest()
     QFETCH(Contour, contour);
     QFETCH(Contour, result);
 
-    ContourAlgorithms::_CombineLinesInContour(contour);
+    const AngleFunctor* p_functor = new AngleFunctor(0);
+    ContourAlgorithms::_CombineLinesInContour(contour, p_functor);
+    delete p_functor;
+
     QCOMPARE(contour, result);
 }
 
@@ -288,7 +297,7 @@ void Test::GaussTest()
     QFETCH(double, x);
     QFETCH(double, result);
 
-    bool res = double_equal(Math::_Gauss(deviation, x), result);
+    bool res = Math::double_equal(Math::_Gauss(deviation, x), result);
     QCOMPARE(res, true);
 }
 
@@ -308,7 +317,7 @@ void Test::FormGaussCoeffsTest()
 
     for(int i = 0; i<coeffs.size()/2; ++i)
     {
-        QVERIFY(double_equal(coeffs[i], coeffs[coeffs.size()-i-1]));
+        QVERIFY(Math::double_equal(coeffs[i], coeffs[coeffs.size()-i-1]));
     }
 
     double sum = 0;
@@ -316,19 +325,115 @@ void Test::FormGaussCoeffsTest()
     for(int i = 0; i<coeffs.size(); ++i)
         sum += coeffs[i];
 
-    QVERIFY(double_equal(sum, 1.0));
+    QVERIFY(Math::double_equal(sum, 1.0));
 }
 
 void Test::FromGradusToRadianTest()
 {
-    QCOMPARE(double_equal(Math::FromGradusToRadian(30), 0.5236), true);
-    QCOMPARE(double_equal(Math::FromGradusToRadian(170), 2.9671), true);
+    QCOMPARE(Math::double_equal(Math::FromGradusToRadian(30), 0.5236), true);
+    QCOMPARE(Math::double_equal(Math::FromGradusToRadian(170), 2.9671), true);
 }
 
 void Test::FromRadianToGradusTest()
 {
-    QCOMPARE(double_equal(Math::FromRadianToGradus(0.5236), 30), true);
-    QCOMPARE(double_equal(Math::FromRadianToGradus(2.9671), 170), true);
+    QCOMPARE(Math::double_equal(Math::FromRadianToGradus(0.5236), 30), true);
+    QCOMPARE(Math::double_equal(Math::FromRadianToGradus(2.9671), 170), true);
+}
+
+void Test::LineAngleInGradusTest()
+{
+    QFETCH(QPoint, a);
+    QFETCH(QPoint, b);
+    QFETCH(double, result);
+
+    QCOMPARE(Math::double_equal(Math::LineAngleInGradus(a, b), result), true);
+}
+
+void Test::LineAngleInGradusTest_data()
+{
+    QTest::addColumn<QPoint>("a");
+    QTest::addColumn<QPoint>("b");
+    QTest::addColumn<double>("result");
+
+    QTest::newRow("1")<<QPoint(0, 0)<<QPoint(1, 1)<<45.0;
+    QTest::newRow("2")<<QPoint(0, 0)<<QPoint(1, 0)<<0.0;
+    QTest::newRow("3")<<QPoint(0, 0)<<QPoint(0, 1)<<90.0;
+    QTest::newRow("4")<<QPoint(1, 0)<<QPoint(-1, 3)<<-56.3099;
+}
+
+void Test::DoesLinesWithSameAngleTest()
+{
+    QFETCH(QPoint, a);
+    QFETCH(QPoint, b);
+    QFETCH(QPoint, c);
+    QFETCH(double, deviation);
+    QFETCH(bool, result);
+
+    QCOMPARE(Math::DoesLinesWithSameAngle(a, b, c, deviation), result);
+}
+
+void Test::DoesLinesWithSameAngleTest_data()
+{
+    QTest::addColumn<QPoint>("a");
+    QTest::addColumn<QPoint>("b");
+    QTest::addColumn<QPoint>("c");
+    QTest::addColumn<double>("deviation");
+    QTest::addColumn<bool>("result");
+
+    QTest::newRow("1")<<QPoint(0, 0)<<QPoint(1, 1)<<QPoint(2, 2)<<0.0<<true;
+    QTest::newRow("2")<<QPoint(0, 0)<<QPoint(1, 2)<<QPoint(2, 2)<<40.0<<false;
+    QTest::newRow("3")<<QPoint(0, 0)<<QPoint(1, 2)<<QPoint(2, 3)<<40.0<<true;
+    QTest::newRow("4")<<QPoint(0, 0)<<QPoint(1, 2)<<QPoint(2, 3)<<15.0<<false;
+    QTest::newRow("5")<<QPoint(0, 0)<<QPoint(1, 2)<<QPoint(2, 3)<<20.0<<true;
+}
+
+void Test::DistanceTest()
+{
+    QFETCH(QPoint, a);
+    QFETCH(QPoint, b);
+    QFETCH(double, result);
+
+    QCOMPARE(Math::double_equal(Math::Distance(a, b), result), true);
+}
+
+void Test::DistanceTest_data()
+{
+    QTest::addColumn<QPoint>("a");
+    QTest::addColumn<QPoint>("b");
+    QTest::addColumn<double>("result");
+
+    QTest::newRow("1")<<QPoint(0, 0)<<QPoint(1, 0)<<1.0;
+    QTest::newRow("2")<<QPoint(0, 0)<<QPoint(0, 0)<<0.0;
+    QTest::newRow("3")<<QPoint(0, 0)<<QPoint(1, 1)<<1.4142;
+    QTest::newRow("4")<<QPoint(-1, 3)<<QPoint(0, 0)<<3.1622;
+}
+
+void Test::DistanceFunctorTest()
+{
+    QFETCH(QPoint, a);
+    QFETCH(QPoint, b);
+    QFETCH(QPoint, c);
+    QFETCH(double, distance);
+    QFETCH(bool, result);
+
+    LengthFunctor functor(distance);
+
+    QCOMPARE(functor(a, b, c), result);
+}
+
+void Test::DistanceFunctorTest_data()
+{
+    QTest::addColumn<QPoint>("a");
+    QTest::addColumn<QPoint>("b");
+    QTest::addColumn<QPoint>("c");
+    QTest::addColumn<double>("distance");
+    QTest::addColumn<bool>("result");
+
+    QTest::newRow("1")<<QPoint(0, 0)<<QPoint(1, 0)<<QPoint(2, 0)<<1.0<<true;
+    QTest::newRow("2")<<QPoint(0, 0)<<QPoint(2, 0)<<QPoint(4, 0)<<1.0<<false;
+    QTest::newRow("3")<<QPoint(0, 0)<<QPoint(2, 0)<<QPoint(3, 0)<<1.0<<true;
+    QTest::newRow("4")<<QPoint(0, 0)<<QPoint(1, 1)<<QPoint(2, 2)<<1.0<<false;
+    QTest::newRow("5")<<QPoint(0, 0)<<QPoint(2, 0)<<QPoint(5, 0)<<2.0<<true;
 }
 
 #undef public
@@ -336,4 +441,9 @@ void Test::FromRadianToGradusTest()
 QTEST_APPLESS_MAIN(Test)
 
 #include "test.moc"
+
+
+
+
+
 

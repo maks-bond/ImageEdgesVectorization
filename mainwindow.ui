@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>434</width>
-    <height>353</height>
+    <width>542</width>
+    <height>423</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -58,7 +58,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QSpinBox" name="spinBox">
+         <widget class="QSpinBox" name="spinAngle">
           <property name="maximum">
            <number>90</number>
           </property>
@@ -77,10 +77,21 @@
           </property>
          </widget>
         </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QPushButton" name="buttonCombineLines">
+         <widget class="QSpinBox" name="spinLength">
+          <property name="value">
+           <number>1</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonCombineLength">
           <property name="text">
-           <string>Combine Lines</string>
+           <string>Length Combine</string>
           </property>
          </widget>
         </item>
@@ -145,7 +156,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>434</width>
+     <width>542</width>
      <height>21</height>
     </rect>
    </property>

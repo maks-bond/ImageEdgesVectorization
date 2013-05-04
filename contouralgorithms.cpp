@@ -15,16 +15,6 @@ namespace
         return std::floor(i_x + 0.5);
     }
 
-    bool _DoesPointsOnOneLine(const QPoint& i_a, const QPoint& i_b, const QPoint& i_c)
-    {
-        QLine line1(i_a, i_b);
-        QLine line2(i_b, i_c);
-        if((line1.dy() == 0 && line2.dy() == 0) || 1.0*line1.dx()/line1.dy() == 1.0*line2.dx()/line2.dy())
-            return true;
-
-        return false;
-    }
-
     void _WriteCoeffs(const QVector<double>& i_coeffs, const QString& i_file)
     {
         QFile file(i_file);
@@ -53,11 +43,11 @@ TContours ContourAlgorithms::LinesToContours(const Lines &i_lines)
     return _LinkedPointsToContours(_LinesToLinkedPoints(i_lines));
 }
 
-void ContourAlgorithms::CombineLinesInContours(TContours &i_contours)
+void ContourAlgorithms::CombineLinesInContours(TContours &i_contours, const IFunctor* const i_functor)
 {
     for(int i = 0; i<i_contours.size(); ++i)
     {
-        _CombineLinesInContour(i_contours[i]);
+        _CombineLinesInContour(i_contours[i], i_functor);
     }
 }
 
@@ -123,7 +113,7 @@ TContours ContourAlgorithms::_LinkedPointsToContours(const TLinkedPoints &i_link
     return contours;
 }
 
-void ContourAlgorithms::_CombineLinesInContour(Contour &i_contour)
+void ContourAlgorithms::_CombineLinesInContour(Contour &i_contour, const IFunctor* const i_functor)
 {
     TPoints points = i_contour.GetContourPoints();
 
@@ -134,7 +124,7 @@ void ContourAlgorithms::_CombineLinesInContour(Contour &i_contour)
 
     while(k < points.size())
     {
-        if(_DoesPointsOnOneLine(points[i], points[j], points[k]))
+        if((*i_functor)(points[i], points[j], points[k]))
             points.remove(j);
         else
             ++i, ++j, ++k;
@@ -142,11 +132,11 @@ void ContourAlgorithms::_CombineLinesInContour(Contour &i_contour)
 
     if(points.size() >2 && i_contour.IsClosed())
     {
-        if(_DoesPointsOnOneLine(points[points.size() - 2], points[points.size() - 1], points[0]))
+        if((*i_functor)(points[points.size() - 2], points[points.size() - 1], points[0]))
             points.pop_back();
 
         if(points.size() > 2 &&
-                _DoesPointsOnOneLine(points[points.size() - 1], points[0], points[1]))
+                (*i_functor)(points[points.size() - 1], points[0], points[1]))
             points.pop_front();
     }
 

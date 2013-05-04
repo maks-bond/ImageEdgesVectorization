@@ -6,7 +6,11 @@
 #include <QLine>
 #include <QPoint>
 
-const double g_pi = acos(-1.0);
+namespace
+{
+    const double g_pi = acos(-1.0);
+    const double epsilon = 1e-2;
+}
 
 QVector<double> Math::FormGaussCoeffs(double i_deviation, int i_number_of_coeffs)
 {
@@ -62,14 +66,36 @@ double Math::LineAngleInGradus(const QPoint &i_a, const QPoint &i_b)
 {
     QLine line(i_a, i_b);
 
-    if(line.dy() == 0)
+    if(line.dx() == 0)
         return 90;
 
-    double tangens = line.dx()/line.dy();
+    double tangens = line.dy()*1.0/line.dx();
     double angle_in_radian = atan(tangens);
     return FromRadianToGradus(angle_in_radian);
 }
 
+bool Math::DoesLinesWithSameAngle(const QPoint &i_a, const QPoint &i_b, const QPoint &i_c, double i_deviation)
+{
+    double angle1 = LineAngleInGradus(i_a, i_b);
+    double angle2 = LineAngleInGradus(i_b, i_c);
+
+    return double_equal(fabs(fabs(angle1 - angle2) - i_deviation), 0)
+            || fabs(angle1 - angle2) < i_deviation;
+}
+
+double Math::Distance(const QPoint &i_a, const QPoint &i_b)
+{
+    QLine line(i_a, i_b);
+
+    return sqrt(line.dx()*line.dx() + line.dy()*line.dy());
+}
+
 Math::Math()
 {
+}
+
+
+bool Math::double_equal(double i_x, double i_y)
+{
+    return fabs(i_x - i_y) < epsilon;
 }

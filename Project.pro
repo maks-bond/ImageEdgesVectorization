@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     contour.cpp \
     contouralgorithms.cpp \
     geometryutils.cpp \
-    math_utils.cpp
+    math_utils.cpp \
+    Functors.cpp
 
 HEADERS  += mainwindow.h \
     Algorithms.h \
@@ -28,6 +29,7 @@ HEADERS  += mainwindow.h \
     contour.h \
     contouralgorithms.h \
     geometryutils.h \
-    math_utils.h
+    math_utils.h \
+    Functors.h
 
 FORMS    += mainwindow.ui

@@ -19,12 +19,14 @@ HEADERS += ../contour.h \
            ../contouralgorithms.h \
            ../DataStructures.h \
            ../geometryutils.h \
-    ../math_utils.h
+    ../math_utils.h \
+    ../Functors.h
 
 SOURCES += test.cpp \
            ../contouralgorithms.cpp \
            ../contour.cpp \
            ../geometryutils.cpp \
-    ../math_utils.cpp
+    ../math_utils.cpp \
+    ../Functors.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
